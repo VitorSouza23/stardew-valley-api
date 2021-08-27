@@ -22,12 +22,12 @@ const doc = {
     definitions: {
         Item : {
             itemName: "Weeds",
-            id: 2
+            id: 0
         },
         Items: [
             {
                 itemName: "Weeds",
-                id: 2
+                id: 0
             }
         ]
     }

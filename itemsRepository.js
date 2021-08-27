@@ -2,38 +2,23 @@ const csv = require('csvtojson')({delimiter: ';'});
 const itemsFileName = 'items.csv';
 
 const itemsRepository = {
-    _itemsJson: '',
-    _init: function(){
-        if(this._itemsJson === '') {
-            return csv.fromFile(itemsFileName)
-                .then((json) => {
-                    this._itemsJson = json;
-                    return this._itemsJson;
-                })
-                .catch(error => console.error(error));
+    _itemsJson: [],
+    _init: async () => {
+        if(itemsRepository._itemsJson.length === 0) {
+            itemsRepository._itemsJson = await csv.fromFile(itemsFileName)
         }
-        return new Promise((resolve) => resolve(this._itemsJson));
+        return itemsRepository._itemsJson;
     },
-    getAll: function(callback) {
-        this._init()
-            .then((itemsJson) => callback(itemsJson))
-            .catch(error => console.error(error));
+    getAll: async () => {
+        return await itemsRepository._init();
     },
-    getById: function(id, callback) {
-        this._init()
-            .then(itemsJson => {
-                const item = itemsJson.find(e => e.id == id);
-                callback(item);
-            })
-            .catch(error => console.error(error));
+    getById: async id => {
+        const items = await itemsRepository._init();
+        return items.find(e => e.id == id);
     },
-    getByName: function(name, callback) {
-        this._init()
-            .then(itemsJson => {
-                const item = itemsJson.find(e => e.itemName.toLowerCase() == name.toLowerCase());
-                callback(item);
-            })
-            .catch(error => console.error(error));
+    getByName: async name => {
+        const items = await itemsRepository._init();
+        return items.find(e => e.itemName.toLowerCase() == name.toLowerCase());
     }
 }
 
